@@ -43,10 +43,26 @@ class DownloadDb:
 
 
 def download_file():
+    # importing the requests module
+    import requests
+    print('Downloading started')
     url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
-    wget.download(url)
-    # r_file = requests.get(source_url, stream=True)
-    # with open(file_name, 'wb') as f:
+
+    # Downloading the file by sending the request to the URL
+    req = requests.get(url)
+
+    # Split URL to get the file name
+    filename = url.split('/')[-1]
+
+    # Writing the file to the local file system
+    with open(filename, 'wb') as output_file:
+        output_file.write(req.content)
+    print('Downloading Completed')
+
+    #url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
+    #wget.download(url)
+    #r_file = requests.get(url, stream=True)
+    # with open(r_file, 'wb') as f:
     #     for chunk in r_file:
     #         f.write(chunk)
 
