@@ -6,9 +6,14 @@ from installed_softwares import InstalledSoftware
 from searchEngine import SearchEngineBuilder, CpeSwFitter
 from xmlParser import CpeXmlParser
 import download_db
-
+from cve_parser import CveParser
 
 if __name__ == '__main__':
+    cv = CveParser()
+    cve_dict = cv.get_cpe_and_cve_dict()
+    print()
+
+
     if not os.path.isfile('official-cpe-dictionary_v2.3.xml'):
         download_db.download_file()
         download_db.unzip_file('official-cpe-dictionary_v2.3.xml.zip', directory_to_extract=None)

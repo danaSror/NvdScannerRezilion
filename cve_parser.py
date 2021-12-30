@@ -53,6 +53,39 @@ class CveParser:
         with open("cve_collections_for_{0}.json".format(year), "w") as outfile:
             outfile.write(json_object)
 
+    def get_cpe_and_cve_dict(self):
+        all_cves_for_cpe = {}
+        all_cve_years = self.cve_collections_for_all_years
+        for year in range(2002,2021):
+            all_cve_for_specific_year = all_cve_years[str(year)]
+            for json_cve in all_cve_for_specific_year['CVE_Items']:
+                if len(json_cve['configurations']['nodes']) > 0:
+                    cpe_list_of_this_cve = json_cve['configurations']['nodes'][0]['cpe_match']
+                    for cpe in cpe_list_of_this_cve:
+                        if cpe['cpe23Uri'] in all_cves_for_cpe.keys():
+                            all_cves_for_cpe[cpe['cpe23Uri']].append(json_cve['cve']['CVE_data_meta']['ID'])
+                        else:
+                            all_cves_for_cpe[cpe['cpe23Uri']] = []
+                            all_cves_for_cpe[cpe['cpe23Uri']].append(json_cve['cve']['CVE_data_meta']['ID'])
+        return all_cves_for_cpe
+
+    def get_cve_by_identifier(self, identifier: str):
+        identifier_list = identifier.split("-")
+        cve_year = identifier_list[1] #'CVE-1999-0001'
+        for jsov_cve in self.cve_collections_for_all_years[cve_year]['CVE_Items']:
+            if jsov_cve['cve']['CVE_data_meta']['ID'] == identifier:
+                assigner = None
+                if 'ASSIGNER' in jsov_cve['cve']['CVE_data_meta'].keys():
+                    assigner = jsov_cve['cve']['CVE_data_meta']['ASSIGNER']
+                description = jsov_cve['cve']['description']['description_data'][0]['value']
+                severity = None
+                if len(jsov_cve['impact']) > 1:
+                    severity = self.extract_severity(jsov_cve['impact'])
+                cve = Cve(identifier, assigner, description, severity)
+        return cve
+
+
+
     @staticmethod
     def extract_severity(impact: []) -> str:
         if len(impact) > 1:
@@ -61,3 +94,8 @@ class CveParser:
             severity = impact['baseMetricV2']['severity']
 
         return severity
+
+
+if __name__ == '__main__':
+    dict = CveParser().get_cve_collection_for_specific_year("2021")
+    print()
