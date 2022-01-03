@@ -53,7 +53,7 @@ class CveParser:
         with open("cve_collections_for_{0}.json".format(year), "w") as outfile:
             outfile.write(json_object)
 
-    def get_cpe_and_cve_dict(self):
+    def get_cpe_dict(self):
         all_cves_for_cpe = {}
         all_cve_years = self.cve_collections_for_all_years
         for year in range(2002,2021):
@@ -62,11 +62,12 @@ class CveParser:
                 if len(json_cve['configurations']['nodes']) > 0:
                     cpe_list_of_this_cve = json_cve['configurations']['nodes'][0]['cpe_match']
                     for cpe in cpe_list_of_this_cve:
-                        if cpe['cpe23Uri'] in all_cves_for_cpe.keys():
-                            all_cves_for_cpe[cpe['cpe23Uri']].append(json_cve['cve']['CVE_data_meta']['ID'])
+                        cpe_key = cpe['cpe23Uri'][8:]
+                        if cpe_key in all_cves_for_cpe.keys():
+                            all_cves_for_cpe[cpe_key].append(json_cve['cve']['CVE_data_meta']['ID'])
                         else:
-                            all_cves_for_cpe[cpe['cpe23Uri']] = []
-                            all_cves_for_cpe[cpe['cpe23Uri']].append(json_cve['cve']['CVE_data_meta']['ID'])
+                            all_cves_for_cpe[cpe_key] = []
+                            all_cves_for_cpe[cpe_key].append(json_cve['cve']['CVE_data_meta']['ID'])
         return all_cves_for_cpe
 
     def get_cve_by_identifier(self, identifier: str):

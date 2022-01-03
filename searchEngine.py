@@ -88,8 +88,8 @@ class CpeSwFitter:
 
     def calc_similarity(self, qry):
         parsed_query = parse_doc(qry)
-        if qry.__contains__("One"):
-            print('d')
+        # if qry.__contains__("One"):
+        #     print('d')
         bow_query = self.similarity_matrix[self.dictionary.doc2bow(parsed_query)]
         res_sim_sorted = np.argsort(bow_query)
         res_sim_sorted_arg = np.sort(bow_query)
@@ -99,9 +99,9 @@ class CpeSwFitter:
         return np_df.sort_values(by=[1], ascending=False)
 
     def searcher(self, qry, num_to_retrieve):
-        if qry.__contains__("One"):
-
-            print('d')
+        # if qry.__contains__("One"):
+        #
+        #     print('d')
         indices_and_score = self.calc_similarity(qry).head(num_to_retrieve)
         relevant_docs = self.parsed_xml.iloc[indices_and_score[0]][["cpe_items", "titles"]].reset_index(drop=True)
         relevant_docs["sim_score"] = indices_and_score[1].iloc[:num_to_retrieve].reset_index(drop=True)
@@ -120,9 +120,10 @@ class CpeSwFitter:
                                     relevant_docs["sim_score"].iloc[i]])
         final_res = pd.DataFrame(final_res)
         final_res.columns = ["registry_sw", "cpe_items", "titles", "sim_score"]
-        final_res.to_csv('retrieved_{}.csv'.format(self.sim_func_name))
-        print(final_res)
-        print("end")
+        final_res = final_res[final_res["sim_score"] > 0.7]
+        final_res.to_csv('software_retrieved.csv')
+        print("Complete process of fit software to cpe")
+        return final_res[["registry_sw", "cpe_items", "titles"]]
 
 
 class SearchEngineBuilder:

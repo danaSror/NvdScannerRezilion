@@ -57,7 +57,6 @@ def download_file():
     # Writing the file to the local file system
     with open(filename, 'wb') as output_file:
         output_file.write(req.content)
-    print('Downloading Completed')
 
     #url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
     #wget.download(url)
