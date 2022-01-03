@@ -57,7 +57,6 @@ class Agent:
         # TODO - search the result cpe in the cpe-cve dictionary and return for each cpe a cve list
         for row in software_to_cpe_match_df.itertuples(index=True, name='Pandas'):
             software_name = row.registry_sw
-            #cpe_title = row.titles
             cpe_item = row.cpe_items
             for key in cpe_dictionary.keys():
                 if cpe_item[5:] in key:
