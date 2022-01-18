@@ -1,6 +1,6 @@
-import download_db
+from client.codes import download_db
 import json
-from cve import Cve
+from client.codes.cve import Cve
 from dataclasses import dataclass
 
 
@@ -56,7 +56,7 @@ class CveParser:
     def get_cpe_dict(self):
         all_cves_for_cpe = {}
         all_cve_years = self.cve_collections_for_all_years
-        for year in range(2002,2021):
+        for year in range(2002, 2021):
             all_cve_for_specific_year = all_cve_years[str(year)]
             for json_cve in all_cve_for_specific_year['CVE_Items']:
                 if len(json_cve['configurations']['nodes']) > 0:
@@ -72,7 +72,7 @@ class CveParser:
 
     def get_cve_by_identifier(self, identifier: str):
         identifier_list = identifier.split("-")
-        cve_year = identifier_list[1] #'CVE-1999-0001'
+        cve_year = identifier_list[1]  # 'CVE-1999-0001'
         for jsov_cve in self.cve_collections_for_all_years[cve_year]['CVE_Items']:
             if jsov_cve['cve']['CVE_data_meta']['ID'] == identifier:
                 assigner = None
@@ -84,8 +84,6 @@ class CveParser:
                     severity = self.extract_severity(jsov_cve['impact'])
                 cve = Cve(identifier, assigner, description, severity)
         return cve
-
-
 
     @staticmethod
     def extract_severity(impact: []) -> str:

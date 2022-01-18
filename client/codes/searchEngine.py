@@ -77,8 +77,8 @@ def load_pickle(file_path):
 class CpeSwFitter:
     def __init__(self, parsed_xml_path, sim_func_name):
         self.registry_data = pd.read_json("registry_data.json")
-        self.dictionary = load_pickle('./models/dictionary.gensim')
-        self.bow_corpus_tfidf = load_pickle('./models/corpus_tfidf.pkl')
+        self.dictionary = load_pickle('models/dictionary.gensim')
+        self.bow_corpus_tfidf = load_pickle('models/corpus_tfidf.pkl')
         self.similarity_matrix = similarities.SparseMatrixSimilarity.load('./models/similarity_matrix.gensim')
         self.sim_func_name = sim_func_name
         # if sim_func_name == 'cosin': self.similarity_func = similarities.SoftCosineSimilarity.load(
@@ -181,8 +181,8 @@ class SearchEngineBuilder:
         #     cossin_sim_model.save('./models/similarity_func_{}.gensim'.format(sim_func_name))
         # elif sim_func_name == 'default':
         #     similarity_matrix = similarities.SparseMatrixSimilarity(bow_corpus_tfidf, num_features=len(dictionary))
-        pathlib.Path("./models").mkdir(parents=True, exist_ok=True)
+        pathlib.Path("models").mkdir(parents=True, exist_ok=True)
         dictionary.save('./models/dictionary.gensim')
-        pickle.dump(bow_corpus_tfidf, open('./models/corpus_tfidf.pkl', 'wb'))
+        pickle.dump(bow_corpus_tfidf, open('models/corpus_tfidf.pkl', 'wb'))
         similarity_matrix.save('./models/similarity_matrix.gensim')
 

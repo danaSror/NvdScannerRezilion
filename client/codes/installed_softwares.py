@@ -1,8 +1,6 @@
-import os
 import winreg
 from winreg import QueryValueEx, EnumKey
 import logging
-
 import pandas as pd
 
 
@@ -28,7 +26,7 @@ class RegistryConnection:
         except FileNotFoundError:
             return ['']
 
-    def get_software_enum_key(self, directory_conn, software_index):
+    def get_software_enum_key(self, directory_conn, software_index) :
         return EnumKey(directory_conn, software_index)
 
 

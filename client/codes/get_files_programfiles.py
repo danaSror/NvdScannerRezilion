@@ -1,8 +1,4 @@
-from os import listdir
-from os.path import isfile, join
 import os
-import shutil
-
 
 def get_file_from_path(name_software):
     list_of_path_directory = []
