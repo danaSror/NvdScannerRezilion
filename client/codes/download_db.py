@@ -1,5 +1,4 @@
 import os
-
 import requests
 import re
 from os import listdir
@@ -7,7 +6,6 @@ from os.path import isfile, join
 import zipfile
 import json
 import pathlib
-import wget
 
 
 class DownloadDb:
@@ -34,6 +32,7 @@ class DownloadDb:
        Finally the function writes all the files to NVD folder on the local disk
         :return:
         """
+        print("downloading all data...")
         r = requests.get('https://nvd.nist.gov/vuln/data-feeds#JSON_FEED')
         for filename in re.findall("nvdcve-1.1-[0-9]*\.json\.zip", r.text):
             r_file = requests.get("https://nvd.nist.gov/feeds/json/cve/1.1/" + filename, stream=True)
@@ -41,35 +40,29 @@ class DownloadDb:
                 for chunk in r_file:
                     f.write(chunk)
 
+    @staticmethod
+    def download_file():
+        # importing the requests module
+        import requests
+        print('Downloading started')
+        url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
 
-def download_file():
-    # importing the requests module
-    import requests
-    print('Downloading started')
-    url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
+        # Downloading the file by sending the request to the URL
+        req = requests.get(url)
 
-    # Downloading the file by sending the request to the URL
-    req = requests.get(url)
+        # Split URL to get the file name
+        filename = url.split('/')[-1]
 
-    # Split URL to get the file name
-    filename = url.split('/')[-1]
-
-    # Writing the file to the local file system
-    with open(filename, 'wb') as output_file:
-        output_file.write(req.content)
-    print('Downloading Completed')
-
-    #url = 'https://nvd.nist.gov/feeds/xml/cpe/dictionary/official-cpe-dictionary_v2.3.xml.zip'
-    #wget.download(url)
-    #r_file = requests.get(url, stream=True)
-    # with open(r_file, 'wb') as f:
-    #     for chunk in r_file:
-    #         f.write(chunk)
+        # Writing the file to the local file system
+        with open(filename, 'wb') as output_file:
+            output_file.write(req.content)
 
 
-def unzip_file(file_name, directory_to_extract=None):
-    with zipfile.ZipFile(file_name, 'r') as zip_ref:
-        zip_ref.extractall(directory_to_extract)
-    os.remove(file_name)  # removing the .zip file
+    @staticmethod
+    def unzip_file(file_name, directory_to_extract=None):
+        print("Unzip the files...")
+        with zipfile.ZipFile(file_name, 'r') as zip_ref:
+            zip_ref.extractall(directory_to_extract)
+        os.remove(file_name)  # removing the .zip file
 
 
